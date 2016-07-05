@@ -22,3 +22,29 @@
     - ruby2.3-dev
     - rake
     - git
+
+  - name: Install Python Packages
+    pip:
+      state: latest
+      name: "{{item}}"
+    with_items:
+    - virtualenv
+
+  - name: Install Virtualenv Python Packages
+    pip:
+      state: latest
+      virtualenv: /home/vagrant/ansible
+      name: "{{item}}"
+    with_items:
+    - ansible
+
+  - name: Install Serverspec
+    gem:
+      name: "{{item}}"
+      state: latest
+      user_install: no
+    with_items:
+      - rake
+      - serverspec
+      - serverspec-runner
+      - test-kitchen

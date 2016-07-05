@@ -3,8 +3,8 @@ Testmachine for testing with test-kitchen, serverspec and serverspec-runner.
 
 # Requirements
 
-Vagrant >= 1.8.1
-VirtualBox
+* Vagrant >= 1.8.1
+* VirtualBox
 
 # Running
 

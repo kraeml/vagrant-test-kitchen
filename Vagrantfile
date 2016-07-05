@@ -66,12 +66,16 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-add-repository -y ppa:brightbox/ruby-ng
-    sudo apt-add-repository -y ppa:git-core/ppa
+    # sudo apt-add-repository -y ppa:brightbox/ruby-ng
+    # sudo apt-add-repository -y ppa:git-core/ppa
     sudo apt-get update
-    sudo apt-get install -y ruby2.3 ruby2.3-dev rake git python-pip python-dev libffi-dev libssl-dev
+    # sudo apt-get install -y ruby2.3 ruby2.3-dev rake git python-pip python-dev libffi-dev libssl-dev
+    sudo apt-get install -y python-pip python-dev libffi-dev libssl-dev
     sudo pip install ansible==1.9.2
-    sudo su vagrant -c 'git config --global user.email "vagrant@example.org"'
-    sudo su vagrant -c 'git config --global user.name  "Vagrant Example"'
+    # sudo su vagrant -c 'git config --global user.email "vagrant@example.org"'
+    # sudo su vagrant -c 'git config --global user.name  "Vagrant Example"'
   SHELL
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "playbook.yml"
+  end
 end

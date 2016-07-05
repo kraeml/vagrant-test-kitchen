@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+  - name: Repositories for ruby, git
+    apt_repository:
+      repo: "{{ item }}"
+
+    with_items:
+    - ppa:brightbox/ruby-ng
+    - ppa:git-core/ppa
+
+  - name: Install Packages
+    apt:
+      cache_valid_time: 3600
+      update_cache: yes
+      state: latest
+      name: "{{ item }}"
+    with_items:
+    - ruby2.3
+    - ruby2.3-dev
+    - rake
+    - git

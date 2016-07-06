@@ -3,13 +3,24 @@
   become: true
 
   tasks:
-  - name: Repositories for ruby, git
+  - name: Import Key
+    apt_key:
+      url:  http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc
+      state: present
+
+  - name: Repositories for ruby, git, virtualbox
     apt_repository:
       repo: "{{item}}"
-
     with_items:
     - ppa:brightbox/ruby-ng
     - ppa:git-core/ppa
+    - deb http://download.virtualbox.org/virtualbox/debian trusty contrib
+
+  - name: Install vagrant
+    apt:
+      deb: "{{item}}"
+    with_items:
+      - https://releases.hashicorp.com/vagrant/1.8.4/vagrant_1.8.4_x86_64.deb
 
   - name: Install Base Packages
     apt:
@@ -22,6 +33,7 @@
     - ruby2.3-dev
     - git
     - vim
+    - virtualbox
 
   - name: Setup git/gem for user vagrant
     copy:

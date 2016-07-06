@@ -48,6 +48,8 @@ Vagrant.configure(2) do |config|
   #   # Customize the amount of memory on the VM:
   #   vb.memory = "1024"
       vb.linked_clone = true if Vagrant::VERSION =~ /^1.8/
+      vb.memory = 4096
+      vb.cpus = 2
       vb.customize ["modifyvm", :id, "--ioapic", "on"]
       vb.customize ["modifyvm", :id, "--paravirtprovider", "default"]
       vb.customize ["modifyvm", :id, "--nestedpaging", "on"]

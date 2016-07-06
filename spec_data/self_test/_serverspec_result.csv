@@ -1,0 +1,51 @@
+description,result
+self_test@localhost(127.0.0.1),"",1
+  Default User,"",1
+"    User ""root""","",2
+      should exist,OK,3
+      should have uid 0,OK,3
+"      should have home directory ""/root""",OK,3
+"    Group ""root""","",2
+      should have gid 0,OK,3
+"    User ""vagrant""","",2
+      should exist,OK,3
+      should have uid 1000,OK,3
+"      should have home directory ""/home/vagrant""",OK,3
+"    Group ""vagrant""","",2
+      should have gid 1000,OK,3
+  Default Packages,"",1
+"    Package ""ruby2.3""","",2
+      should be installed,OK,3
+"    Package ""ruby2.3-dev""","",2
+      should be installed,OK,3
+"    Package ""git""","",2
+      should be installed,OK,3
+"    Package ""vim""","",2
+      should be installed,OK,3
+"    Package ""dkms""","",2
+      should be installed,OK,3
+  Serverspec Files,"",1
+"    File ""/home/vagrant/.gem/ruby/2.3.0/bin/kitchen""","",2
+      should be file,OK,3
+      should be executable,OK,3
+"      should be owned by ""vagrant""",OK,3
+"      should be grouped into ""vagrant""",OK,3
+"    File ""/home/vagrant/.gem/ruby/2.3.0/bin/rake""","",2
+      should be file,OK,3
+      should be executable,OK,3
+"      should be owned by ""vagrant""",OK,3
+"      should be grouped into ""vagrant""",OK,3
+"    File ""/home/vagrant/.gem/ruby/2.3.0/bin/serverspec-init""","",2
+      should be file,OK,3
+      should be executable,OK,3
+"      should be owned by ""vagrant""",OK,3
+"      should be grouped into ""vagrant""",OK,3
+"    File ""/home/vagrant/.gem/ruby/2.3.0/bin/serverspec-runner""","",2
+      should be file,OK,3
+      should be executable,OK,3
+"      should be owned by ""vagrant""",OK,3
+"      should be grouped into ""vagrant""",OK,3
+  kitchen.ci plugins,"",1
+"    Command ""ls -d /home/vagrant/.gem/ruby/2.3.0/gems/kitchen-vagrant*""","",2
+      exit_status,"",3
+        should eq 0,OK,4

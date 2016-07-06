@@ -1,12 +1,13 @@
 # Testmachine
+
 Testmachine for testing with test-kitchen, serverspec and serverspec-runner.
 
-# Requirements
+## Requirements
 
-* Vagrant >= 1.8.1
+* Vagrant >= 1.8.4
 * VirtualBox
 
-# Running
+## Running
 
 ```bash
 $ vagrant up

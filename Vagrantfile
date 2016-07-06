@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-
+MACHINE_HOSTNAME = "test-kitchen"
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -13,11 +13,9 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/trusty64"
-
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = true
+  end
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -37,7 +35,7 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "./spec_data", "/home/vagrant/spec_data"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -50,32 +48,26 @@ Vagrant.configure(2) do |config|
   #   # Customize the amount of memory on the VM:
   #   vb.memory = "1024"
       vb.linked_clone = true if Vagrant::VERSION =~ /^1.8/
+      vb.customize ["modifyvm", :id, "--ioapic", "on"]
+      vb.customize ["modifyvm", :id, "--paravirtprovider", "default"]
+      vb.customize ["modifyvm", :id, "--nestedpaging", "on"]
+      vb.customize ["modifyvm", :id, "--pae", "on"]
   end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
 
-  # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
-  # such as FTP and Heroku are also available. See the documentation at
-  # https://docs.vagrantup.com/v2/push/atlas.html for more information.
-  # config.push.define "atlas" do |push|
-  #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
-  # end
-
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-    # sudo apt-add-repository -y ppa:brightbox/ruby-ng
-    # sudo apt-add-repository -y ppa:git-core/ppa
-    sudo apt-get update
-    # sudo apt-get install -y ruby2.3 ruby2.3-dev rake git python-pip python-dev libffi-dev libssl-dev
-    sudo apt-get install -y python-pip python-dev libffi-dev libssl-dev
-    sudo pip install ansible==1.9.2
-    # sudo su vagrant -c 'git config --global user.email "vagrant@example.org"'
-    # sudo su vagrant -c 'git config --global user.name  "Vagrant Example"'
-  SHELL
   config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "playbook.yml"
+    #ansible.verbose = 'vvvv'
+    ansible.install = true
+    #ansible.version = "1.9.2"
+    ansible.install_mode = :pip
+  end
+  config.vm.define MACHINE_HOSTNAME do |machine|
+    machine.vm.hostname = MACHINE_HOSTNAME
   end
 end

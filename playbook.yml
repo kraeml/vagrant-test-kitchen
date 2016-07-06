@@ -5,7 +5,7 @@
   tasks:
   - name: Repositories for ruby, git
     apt_repository:
-      repo: "{{ item }}"
+      repo: "{{item}}"
 
     with_items:
     - ppa:brightbox/ruby-ng
@@ -15,36 +15,40 @@
     apt:
       cache_valid_time: 3600
       update_cache: yes
-      state: latest
-      name: "{{ item }}"
+      state: present
+      name: "{{item}}"
     with_items:
     - ruby2.3
     - ruby2.3-dev
-    - rake
     - git
+    - vim
 
-  - name: Install Python Packages
-    pip:
-      state: latest
-      name: "{{item}}"
+  - name: Setup git/gem for user vagrant
+    copy:
+      src: "{{item}}"
+      dest: /home/vagrant/.{{item}}
+      owner: vagrant
+      group: vagrant
+      mode: u=rw,g=rw,o=r
     with_items:
-    - virtualenv
+    - gitconfig
+    - gemrc
 
-  - name: Install Virtualenv Python Packages
-    pip:
-      state: latest
-      virtualenv: /home/vagrant/ansible
-      name: "{{item}}"
-    with_items:
-    - ansible
+  - name: Setup Path for gem
+    lineinfile:
+      dest: /home/vagrant/.bashrc
+      line: export PATH=/home/vagrant/.gem/ruby/2.3.0/bin:$PATH
+      state: present
 
   - name: Install Serverspec
+    become_user: vagrant
     gem:
       name: "{{item}}"
       state: latest
-      user_install: no
+      user_install: yes
     with_items:
       - rake
       - serverspec
       - serverspec-runner
       - test-kitchen
+      - kitchen-vagrant

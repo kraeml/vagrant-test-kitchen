@@ -1,1 +1,3 @@
 .vagrant/
+playbook.retry
+spec_data/*

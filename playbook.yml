@@ -33,6 +33,7 @@
     - ruby2.3-dev
     - git
     - vim
+    - htop
     - virtualbox
 
   - name: Setup git/gem for user vagrant

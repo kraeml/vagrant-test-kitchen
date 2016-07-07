@@ -16,11 +16,17 @@
     - ppa:git-core/ppa
     - deb http://download.virtualbox.org/virtualbox/debian trusty contrib
 
+  - name: Vagrant installed?
+    command: vagrant --version
+    ignore_errors: yes
+    register: vagrant_version
+
   - name: Install vagrant
     apt:
       deb: "{{item}}"
     with_items:
       - https://releases.hashicorp.com/vagrant/1.8.4/vagrant_1.8.4_x86_64.deb
+    when: vagrant_version|failed or vagrant_version.stdout != "Vagrant 1.8.4"
 
   - name: Install Base Packages
     apt:
@@ -65,3 +71,14 @@
       - serverspec-runner
       - test-kitchen
       - kitchen-vagrant
+      - kitchen-ansible
+      - kitchen-docker
+
+  - name: Download vagrant-boxes
+    become: vagrant
+    shell: vagrant box add "{{item}}" --provider virtualbox || vagrant box update "{{item}}" --provider virtualbox || true
+    ignore_errors: yes
+    with_items:
+    - ubuntu/trusty32
+    - boxcutter/debian82-i386
+    - box-cutter/centos67-i386

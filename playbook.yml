@@ -8,8 +8,11 @@
   tasks:
   - name: Import Key
     apt_key:
-      url:  http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc
+      url:  "{{item}}"
       state: present
+    with_items:
+      - http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc
+      - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key
 
   - name: Repositories for ruby, git, virtualbox
     apt_repository:
@@ -18,6 +21,7 @@
     - ppa:brightbox/ruby-ng
     - ppa:git-core/ppa
     - deb http://download.virtualbox.org/virtualbox/debian trusty contrib
+    - deb http://pkg.jenkins-ci.org/debian binary/
 
   - name: Vagrant installed?
     command: vagrant --version
@@ -44,6 +48,7 @@
     - vim
     - htop
     - virtualbox
+    - jenkins
 
   - name: Setup git/gem for user vagrant
     copy:
@@ -70,6 +75,7 @@
       user_install: yes
     with_items:
       - rake
+      - bundle
       - serverspec
       - serverspec-runner
       - test-kitchen
